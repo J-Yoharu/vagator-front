@@ -8,9 +8,7 @@
         <div class="h-12 w-12 flex justify-center items-center rounded-full border-4 border-red-600">
             <img src="../assets/logo.png" class="h-75">
         </div>
-        <button class="bg-white hover:bg-gray-100 font-bold text-red-600 font-semibold py-2 px-4">
-            Login
-        </button>
+        <router-link tag="button" to="/login" class="bg-white hover:bg-gray-100 font-bold text-red-600 font-semibold py-2 px-4">Login</router-link>
     </div>
   </div>
 </nav>

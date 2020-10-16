@@ -10,7 +10,6 @@
       </h4>
     </div>
     <form class="mt-8" action="#" method="POST">
-      <input type="hidden" name="remember" value="true">
       <div class="rounded-md">
         <div class="font-semibold text-gray-600">
             <label>E-mail</label>
@@ -35,11 +34,19 @@
 <script>
 export default {
   beforeRouteEnter(to, from, next){
+      console.log("entrou")
     next(vm => {
         vm.$emit("routeLogin",true)
     })
-  }
+  },
+  beforeRouteLeave(to, from, next){
+      console.log("saiu")
+    next(vm => {
+        vm.$emit("routeLogin",false)
+    })
+  },
 }
+
 </script>
 
 <style>
