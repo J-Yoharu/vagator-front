@@ -2,7 +2,7 @@
     <div class="bg-white w-100 rounded-lg p-5 mb-5 shadow-md">
        <router-link :to="`/jobs/${job.id}`">
             <div class="text-lg text-gray-700 flex justify-between">
-                <span>Publicado há 2 dias</span>
+                <span>{{job.created_at}}</span>
                 <!-- admin button -->
                 <div class="relative inline-block text-left">
                     <button @click="toggleMenu" class="focus:outline-none">
@@ -24,9 +24,9 @@
                 {{job.title}}
             </div>
             <div class="flex mt-4">
-                <div class="mr-2 text-lg text-gray-700"> {{job.actuation_field}} </div>
-                <div class="mr-2 text-lg text-gray-700"> · {{job.locale}} </div>
-                <div class="mr-2 text-lg text-gray-700"> · {{job.job_type}} </div>
+                <div class="mr-2 text-lg text-gray-700"> {{job.department.department}} </div>
+                <div class="mr-2 text-lg text-gray-700"> · {{job.locale.locale}} </div>
+                <div class="mr-2 text-lg text-gray-700"> · {{job.type.type}} </div>
                 <div v-if="job.is_remote" class="mr-2 text-lg text-gray-700"> · Remoto </div>
             </div>
         </router-link>   
@@ -36,13 +36,31 @@
 <script>
 export default {
     props:['job'],
-    mounted(){
-        console.log(this.n)
+    data(){
+        return {
+            date: ''
+        }
     },
     methods: {
         toggleMenu() {
             document.querySelector(`#adminMenu${this.job.id}`).classList.toggle('hidden')
+        },
+        differenceBetweenDates(){
+            let today = new Date(new Date().toJSON().slice(0,10).replace(/-/g,'/'))
+            let postData = new Date(this.job.created_at.slice(0,10).replace(/-/g,'/'))
+            let difference = (today.getTime() - postData.getTime()) / (1000 * 3600 * 24);
+            return difference;
+        },
+        calcPostTime(){
+                        if(this.differenceBetweenDates() == 0){
+                return "Publicado Hoje"
+            }
+            return `Publicado há ${id} dias`;
         }
+ 
+    },
+    created(){
+        this.differenceBetweenDates()
     }
 }
 </script>

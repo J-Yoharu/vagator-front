@@ -15,7 +15,7 @@
       <div class="container mx-auto">
         <div class="flex justify-between mb-5">
           <h2 class="text-2xl font-semibold">Vagas de emprego</h2> 
-          <span class="text-gray-700 font-semibold">4 vagas de emprego</span>
+          <span class="text-gray-700 font-semibold">{{this.jobCard.length}} vagas de emprego</span>
         </div>
         
           <form action="" class="mb-10">
@@ -28,34 +28,38 @@
             <div class="mt-5 flex justify-around mb-6">
 
               <div class="w-full mr-5 text-gray-600">
-                <select name="opcoes" class="p-3 text-lg w-full rounded-lg border" placeholder="Local">
+                <select name="opcoes" class="p-3 text-lg w-full rounded-lg border" v-model="selectedLocale"
+                  @change="filter" placeholder="Local"> 
                   <option value="" disabled selected hidden>Local</option>
                   <option value=""></option>
-                  <option v-for="locale in job.locales" :key="locale" :value="locale">{{locale}}</option>
+                  <option v-for="locale in job.locales" :key="locale.id" :value="locale.id">{{locale.locale}}</option>
                 </select>
               </div>
 
               
               <div class="w-full mr-5 text-gray-600">
-                <select name="opcoes" class="p-3 text-lg w-full rounded-lg border" @change="filter()" v-model="fieldDepartament" placeholder="Local">
+                <select name="opcoes" class="p-3 text-lg w-full rounded-lg border" v-model="selectedDepartment"
+                  @change="filter" placeholder="Local">
                   <option value="" disabled selected hidden>Departamento</option>
                   <option value=""></option>
-                  <option v-for="departament in job.departaments" :key="departament" :value="departament">{{departament}}</option>
+                  <option v-for="departament in job.departaments" :key="departament.id" :value="departament.id">{{departament.department}}</option>
                 </select>
               </div>
 
               
               <div class="border w-full mr-5 rounded-md text-gray-600">
-                <select name="opcoes" class="p-3 text-lg w-full" placeholder="Local">
+                <select name="opcoes" class="p-3 text-lg w-full" v-model="selectedType"
+                  @change="filter" placeholder="Local">
                   <option value="" disabled selected hidden>Tipo de emprego</option>
                   <option value=""></option>
-                  <option v-for="type in job.types" :key="type" :value="type">{{type}}</option>
+                  <option v-for="type in job.types" :key="type.id" :value="type.id">{{type.type}}</option>
                 </select>
               </div>
 
               <div class="w-full text-gray-600 flex items-center">
                 <div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
-                  <input type="checkbox" name="toggle" id="toggle" class="toggle-checkbox focus:outline-none absolute block w-6 h-6 rounded-full bg-white border-4 border-gray-400 appearance-none cursor-pointer"/>
+                  <input type="checkbox" name="toggle" id="toggle" v-model="selectedRemote" @change="filter"
+                    class="toggle-checkbox focus:outline-none absolute block w-6 h-6 rounded-full bg-white border-4 border-gray-400 appearance-none cursor-pointer"/>
                   <label for="toggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-400 cursor-pointer"></label>
               </div>
               <span for="toggle" class="text-lg font-bold text-gray-600">Somente remoto</span>
@@ -64,8 +68,8 @@
             </div>
           </form>
 
-          <job-card v-for="job in jobCard" :key="job.id" :job="job"/>
-          <div v-if="jobCard == ''">NO TIENE</div>
+          <job-card v-for="(job,index) in jobCard" :key="index" :job="job"/>
+          <div v-if="jobCard == ''" class="flex justify-center p-5 text-2xl">Sem resultados</div>
           <div class="bg-white w-100 rounded-lg p-8 mb-5 flex justify-between items-center shadow-md">
             <div class=" text-xl pl-3 mr-2 text-gray-600">
                 Não encontrou o cargo certo? Envie o seu currículo por e-mail para ser considerado novas vagas no futuro. 
@@ -96,17 +100,47 @@ export default {
         locales: [],
         departaments: []
       },
-      fieldDepartament: ''
+      selectedLocale: '',
+      selectedDepartment: '',
+      selectedType: '',
+      selectedRemote:''
     }
   },
   methods:{
-    filter(evt){
-      console.log(evt)
+    filter(){
       this.jobCard = this.jobs.filter(job =>{
-         if (job.title.includes(this.search)) {
+        if (this.selectedRemote ) {
+          if (job.is_remote) {
+            return job
+          }
+          return null
+         }
+         return job
+      }).filter(job =>{
+        if (job.department_id == this.selectedDepartment || this.selectedDepartment == '') {
           return job
          }
-      })
+      }).filter(job =>{
+        if (job.type_id == this.selectedType || this.selectedType == '') {
+          return job
+         }
+      }).filter(job =>{
+        if (job.locale_id == this.selectedLocale || this.selectedLocale == '') {
+          return job
+         }
+      }).filter(job =>{
+        if (job.department_id == this.selectedDepartment || this.selectedDepartment == '') {
+          return job
+         }
+      }).filter(job =>{
+        if (job.department_id == this.selectedDepartment || this.selectedDepartment == '') {
+          return job
+         }
+      }).filter(job =>{
+        if (this.undecorate(job.title).includes(this.undecorate(this.search))) {
+          return job
+         }
+      });
     },
     undecorate(string){
         if(string != undefined){
@@ -119,13 +153,12 @@ export default {
   },
   watch:{
     search(){
-      this.filter();
+      this.filter('title',this.search);
     },
   },
   beforeRouteEnter(to, from, next){
     next(vm => {
           vm.$axios.get('http://127.0.0.1:8000/api/jobs/').then((resp) => {
-            console.log(resp);
             vm.jobs = resp.data;
             vm.jobCard = resp.data;
           })
@@ -135,9 +168,7 @@ export default {
           this.$axios.get('http://127.0.0.1:8000/api/filter').then((resp) => {
             this.job.types = resp.data.types
             this.job.locales = resp.data.locales
-            this.job.departaments = resp.data.actuations
-
-            console.log(resp.data)
+            this.job.departaments = resp.data.departments
           })
   },
   components:{

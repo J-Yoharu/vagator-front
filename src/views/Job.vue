@@ -4,9 +4,9 @@
             <div class="container mx-auto p-8">
                 <h1 class="text-center font-bold text-gray-700 text-2xl">{{job.title}}</h1>
                 <div class="flex justify-center mt-3">
-                    <div class="mr-2 text-lg text-gray-700">{{job.actuation_field}}</div>
-                    <div class="mr-2 text-lg text-gray-700"> · {{job.locale}}</div>
-                    <div class="mr-2 text-lg text-gray-700">· {{job.job_type}}</div>
+                    <div class="mr-2 text-lg text-gray-700">{{job.department.department}} </div>
+                    <div class="mr-2 text-lg text-gray-700"> · {{job.locale.locale}} </div>
+                    <div class="mr-2 text-lg text-gray-700">· {{job.type.type}} </div>
                     <div v-if="job.is_remote" class="mr-2 text-lg text-gray-700"> · Remoto</div>
                 </div>
             </div>
@@ -34,7 +34,11 @@ export default {
     props:['id'],
     data(){
         return{
-            job:{}
+            job:{
+                department: '',
+                locale: '',
+                type: ''
+            }
         }
     },
     beforeRouteEnter(to, from, next){
