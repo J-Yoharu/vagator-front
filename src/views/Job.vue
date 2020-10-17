@@ -2,12 +2,12 @@
   <div class="bg-gray-100">
       <div class="bg-white">
             <div class="container mx-auto p-8">
-                <h1 class="text-center font-bold text-gray-700 text-2xl">Software Engineer</h1>
+                <h1 class="text-center font-bold text-gray-700 text-2xl">{{job.title}}</h1>
                 <div class="flex justify-center mt-3">
-                    <div class="mr-2 text-lg text-gray-700">Marketing ·</div>
-                    <div class="mr-2 text-lg text-gray-700">São Paulo ·</div>
-                    <div class="mr-2 text-lg text-gray-700">Estágio ·</div>
-                    <div class="mr-2 text-lg text-gray-700">Remoto </div>
+                    <div class="mr-2 text-lg text-gray-700">{{job.actuation_field}}</div>
+                    <div class="mr-2 text-lg text-gray-700"> · {{job.locale}}</div>
+                    <div class="mr-2 text-lg text-gray-700">· {{job.job_type}}</div>
+                    <div v-if="job.is_remote" class="mr-2 text-lg text-gray-700"> · Remoto</div>
                 </div>
             </div>
             <hr class="border">
@@ -31,7 +31,20 @@
 
 <script>
 export default {
-    props:['id']
+    props:['id'],
+    data(){
+        return{
+            job:{}
+        }
+    },
+    beforeRouteEnter(to, from, next){
+    next(vm => {
+          vm.$axios.get(`http://127.0.0.1:8000/api/jobs/${vm.id}`).then((resp) => {
+            console.log(resp);
+            vm.job = resp.data;
+          })
+    })
+  },
 }
 </script>
 

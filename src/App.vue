@@ -11,6 +11,7 @@
 <script>
 import Navbar from './components/Nav'
 import FooterVagator from './components/Footer'
+
 export default {
   name: 'App',
   components: {

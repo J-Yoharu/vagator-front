@@ -9,15 +9,15 @@
         Aquisição de talentos
       </h4>
     </div>
-    <form class="mt-8" action="#" method="POST">
+    <form class="mt-8" action="http://localhost:8000/login" method="get" @submit.prevent="login">
       <div class="rounded-md">
         <div class="font-semibold text-gray-600">
             <label>E-mail</label>
-          <input aria-label="Email address" name="email" type="email" required class="block w-full p-2 border border-gray-300 rounded focus:outline-none">
+          <input aria-label="Email address" name="email" type="email" v-model="email" required class="block w-full p-2 border border-gray-300 rounded focus:outline-none">
         </div>
         <div class="mt-3 font-semibold text-gray-600">
             <label>Senha</label>
-          <input aria-label="Password" name="password" type="password" required class="block w-full p-2 border border-gray-300 rounded focus:outline-none">
+          <input aria-label="Password" name="password" type="password" v-model="password" required class="block w-full p-2 border border-gray-300 rounded focus:outline-none">
         </div>
       </div>
 
@@ -33,14 +33,34 @@
 
 <script>
 export default {
+  data(){
+    return{
+      email: 'jonathas@gmail.com',
+      password: '123'
+    }
+  },
+  methods: {
+    login(){
+      this.$axios('http://localhost:8000/sanctum/csrf-cookie').then(resp => {
+        console.log(resp);
+      })
+      this.$axios('http://localhost:8000/login',{
+          params: {
+             email: this.email,
+              password: this.password
+          }
+      }).then((response) => {
+        console.log("chamou")
+        console.log(response.data);
+      })
+    }
+  },
   beforeRouteEnter(to, from, next){
-      console.log("entrou")
     next(vm => {
         vm.$emit("routeLogin",true)
     })
   },
   beforeRouteLeave(to, from, next){
-      console.log("saiu")
     next(vm => {
         vm.$emit("routeLogin",false)
     })
