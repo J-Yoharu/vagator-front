@@ -4,13 +4,20 @@ import Login from './views/Login'
 import Home from './views/Home'
 import Job from './views/Job'
 import JobCreate from './views/JobCreate'
+import JobError from './views/404/Job'
 import Description from './components/job/Description'
 import Apply from './components/job/Apply'
+
 Vue.use(Router)
 
 export default new Router({
     mode: 'history',
-    routes: [{
+    routes: [
+    {
+        path: '',
+        redirect: '/login'
+    }
+    ,{
         path: '/login',
         component: Login
     },{
@@ -19,6 +26,9 @@ export default new Router({
     },{
         path: '/jobs/create',
         component: JobCreate
+    },{
+        path: '/jobs/error',
+        component: JobError
     },{
         path: '/jobs/:id',
         component: Job,

@@ -44,8 +44,11 @@ export default {
     beforeRouteEnter(to, from, next){
     next(vm => {
           vm.$axios.get(`http://127.0.0.1:8000/api/jobs/${vm.id}`).then((resp) => {
-            console.log(resp);
-            vm.job = resp.data;
+              if(Object.keys(resp.data).length !=0){
+                  vm.job = resp.data;           
+                  return true
+            } 
+            next('/jobs/error') 
           })
     })
   },

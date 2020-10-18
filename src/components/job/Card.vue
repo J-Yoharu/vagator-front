@@ -1,8 +1,7 @@
 <template>
     <div class="bg-white w-100 rounded-lg p-5 mb-5 shadow-md">
-       <router-link :to="`/jobs/${job.id}`">
             <div class="text-lg text-gray-700 flex justify-between">
-                <span>{{job.created_at}}</span>
+                <span>{{calcPostTime()}}</span>
                 <!-- admin button -->
                 <div class="relative inline-block text-left">
                     <button @click="toggleMenu" class="focus:outline-none">
@@ -19,17 +18,17 @@
                     </div>
                 </div>
             </div>
-
-            <div class="mt-4 f-red font-semibold text-2xl">
-                {{job.title}}
-            </div>
-            <div class="flex mt-4">
-                <div class="mr-2 text-lg text-gray-700"> {{job.department.department}} </div>
-                <div class="mr-2 text-lg text-gray-700"> · {{job.locale.locale}} </div>
-                <div class="mr-2 text-lg text-gray-700"> · {{job.type.type}} </div>
-                <div v-if="job.is_remote" class="mr-2 text-lg text-gray-700"> · Remoto </div>
-            </div>
-        </router-link>   
+            <router-link :to="`/jobs/${job.id}`">
+                <div class="mt-4 f-red font-semibold text-2xl">
+                    {{job.title}}
+                </div>
+                <div class="flex mt-4">
+                    <div class="mr-2 text-lg text-gray-700"> {{job.department.department}} </div>
+                    <div class="mr-2 text-lg text-gray-700"> · {{job.locale.locale}} </div>
+                    <div class="mr-2 text-lg text-gray-700"> · {{job.type.type}} </div>
+                    <div v-if="job.is_remote" class="mr-2 text-lg text-gray-700"> · Remoto </div>
+                </div>
+            </router-link>   
     </div>
 </template>
 
@@ -52,10 +51,11 @@ export default {
             return difference;
         },
         calcPostTime(){
-                        if(this.differenceBetweenDates() == 0){
+            let days = this.differenceBetweenDates()
+            if(days == 0){
                 return "Publicado Hoje"
             }
-            return `Publicado há ${id} dias`;
+            return `Publicado há ${days} dia`+ days > 1 ? 's':'';
         }
  
     },
