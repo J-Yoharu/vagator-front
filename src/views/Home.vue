@@ -4,10 +4,10 @@
     <h1 class="text-2xl font-semibold">Carreiras na UOTZ</h1>
       <hr class="border">
         <p class="mt-4"> 
-        Destacamos pessoas que vão além, originais, apaixonadas, proativas, comunicativas e flexíveis. Pessoas com perfil analítico,
+        Destacamos pessoas que vão além, <strong>originais, apaixonadas, proativas, comunicativas e flexíveis.</strong>  Pessoas com perfil <strong>analítico,
         desafiador, investigativo, e crítico, boa capacidade de relacionamento, perfil hands on, versátil e muita vontade de fazer
-        acontecer. Interesse em sistemas, tecnologias, novidades do ambiente digital e ferramentas ágeis.
-        Se você gosta de trabalhar em equipe e possui inciativas para resolver problemas, com certeza é a pessoa ideal para ser UOTER.
+        acontecer.</strong> Interesse em sistemas, tecnologias, novidades do <strong>ambiente digital e ferramentas ágeis.</strong> 
+        Se você gosta de <strong> trabalhar em equipe</strong> e possui <strong> inciativas para resolver problemas </strong>, com certeza é a pessoa ideal para ser <strong class="f-red">UOTER</strong>.
         </p>  
   </div>
 
@@ -15,21 +15,21 @@
       <div class="container mx-auto">
         <div class="flex justify-between mb-5">
           <h2 class="text-2xl font-semibold">Vagas de emprego</h2> 
-          <span class="text-gray-700 font-semibold">{{this.jobCard.length}} vagas de emprego</span>
+          <span class="text-gray-700 font-semibold">{{this.jobs.total}} vagas de emprego</span>
         </div>
         
-          <form action="" class="mb-10">
-
-            <div class="bg-white w-full p-1 border rounded-md inline-flex items-center">
-              <i class="p-4 fa fa-2x fa-search"></i>
-              <input type="text" class="w-full text-lg py-5 leading-tight focus:outline-none placeholder-gray-600" v-model="search" placeholder="Pesquisar vagas de emprego...">
+          <div class="mb-10">
+            <form @submit.prevent="search">
+            <div class="bg-white w-full px-5 border rounded-md inline-flex items-center">
+              <input type="text" class="w-full text-lg py-5 leading-tight focus:outline-none placeholder-gray-600" v-model="title" placeholder="Pesquisar vagas de emprego...">
+              <button @click="search" class="focus:outline-none"><i class="p-4 fa fa-2x fa-search"></i></button>
             </div>
             
             <div class="mt-5 flex justify-around mb-6">
 
               <div class="w-full mr-5 text-gray-600">
-                <select name="opcoes" class="p-3 text-lg w-full rounded-lg border" v-model="selectedLocale"
-                  @change="filter" placeholder="Local"> 
+                <select name="opcoes" class="p-3 text-lg w-full rounded-lg border" v-model="selected.locale"
+                 placeholder="Local"> 
                   <option value="" disabled selected hidden>Local</option>
                   <option value=""></option>
                   <option v-for="locale in job.locales" :key="locale.id" :value="locale.id">{{locale.locale}}</option>
@@ -38,8 +38,8 @@
 
               
               <div class="w-full mr-5 text-gray-600">
-                <select name="opcoes" class="p-3 text-lg w-full rounded-lg border" v-model="selectedDepartment"
-                  @change="filter" placeholder="Local">
+                <select name="opcoes" class="p-3 text-lg w-full rounded-lg border" v-model="selected.department"
+                   placeholder="Local">
                   <option value="" disabled selected hidden>Departamento</option>
                   <option value=""></option>
                   <option v-for="departament in job.departaments" :key="departament.id" :value="departament.id">{{departament.department}}</option>
@@ -48,8 +48,8 @@
 
               
               <div class="border w-full mr-5 rounded-md text-gray-600">
-                <select name="opcoes" class="p-3 text-lg w-full" v-model="selectedType"
-                  @change="filter" placeholder="Local">
+                <select name="opcoes" class="p-3 text-lg w-full" v-model="selected.type"
+                  placeholder="Local">
                   <option value="" disabled selected hidden>Tipo de emprego</option>
                   <option value=""></option>
                   <option v-for="type in job.types" :key="type.id" :value="type.id">{{type.type}}</option>
@@ -58,7 +58,7 @@
 
               <div class="w-full text-gray-600 flex items-center">
                 <div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
-                  <input type="checkbox" name="toggle" id="toggle" v-model="selectedRemote" @change="filter"
+                  <input type="checkbox" name="toggle" id="toggle" v-model="selected.remote" 
                     class="toggle-checkbox focus:outline-none absolute block w-6 h-6 rounded-full bg-white border-4 border-gray-400 appearance-none cursor-pointer"/>
                   <label for="toggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-400 cursor-pointer"></label>
               </div>
@@ -66,11 +66,31 @@
               </div>
           
             </div>
-          </form>
+            </form>
+          </div>
 
-          <job-card v-for="(job,index) in jobCard" :key="index" :job="job"/>
-          <div v-if="jobCard == ''" class="flex justify-center p-5 text-2xl">Sem resultados</div>
-          <div class="bg-white w-100 rounded-lg p-8 mb-5 flex justify-between items-center shadow-md">
+          <job-card @delete:job="deleteJob($event)" :user.sync="user" v-for="(job,index) in jobs.data" :key="index" :job="job"/>
+          <div v-if="jobs.data == ''" class="flex justify-center p-5 text-2xl">Sem resultados</div>
+       
+           <div class="flex justify-center mb-5">
+              <nav class="relative z-0 inline-flex shadow-sm">
+                <button :disabled="jobs.prev_page_url == null ? true:false" @click="paginate('prev')" :class="jobs.prev_page_url == null ? 'border border-gray-300 cursor-default bg-gray-200':'border border-blue-300'" class="px-2 py-2 rounded-l-md border bg-white text-sm leading-5 font-medium text-blue-500 hover:text-blue-800 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-100" aria-label="Previous">
+                  <!-- Heroicon name: chevron-left -->
+                  <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                  </svg>
+                </button>
+              
+                <button :disabled="jobs.next_page_url == null ? true:false"  @click="paginate('next')" :class="jobs.next_page_url == null ? 'border border-gray-300 cursor-default bg-gray-200':'border border-blue-300'" class="px-2 py-2 rounded-r-md bg-white text-sm leading-5 font-medium text-blue-500 hover:text-blue-800 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-100 active:text-gray-500 transition ease-in-out duration-150" aria-label="Next">
+                  <!-- Heroicon name: chevron-right -->
+                  <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                  </svg>
+                </button>
+              </nav>
+            </div>
+
+          <div v-if="user == null" class="bg-white w-100 rounded-lg p-8 mb-5 flex justify-between items-center shadow-md">
             <div class=" text-xl pl-3 mr-2 text-gray-600">
                 Não encontrou o cargo certo? Envie o seu currículo por e-mail para ser considerado novas vagas no futuro. 
             </div>
@@ -78,7 +98,6 @@
               <button class="w-64 c-red text-white py-3 rounded-lg">Enviar meu currículo por e-mail</button>
             </div>
           </div>
-      
       </div>
     </div>
   </div>
@@ -90,85 +109,85 @@ import JobCard from '../components/job/Card'
 import 'axios'
 
 export default {
+  props:['user'],
   data(){
     return{
       jobs: [],
-      jobCard: [],
-      search: '',
+      title:'',
       job: {
         types: [],
         locales: [],
         departaments: []
       },
-      selectedLocale: '',
-      selectedDepartment: '',
-      selectedType: '',
-      selectedRemote:''
+      selected:{
+        locale:'',
+        department:'',
+        type:'',
+        remote:false,
+      }
+
     }
   },
   methods:{
-    filter(){
-      this.jobCard = this.jobs.filter(job =>{
-        if (this.selectedRemote ) {
-          if (job.is_remote) {
-            return job
-          }
+    deleteJob(jobDeleteId){
+      console.log(this.jobs)
+      this.jobs.data = this.jobs.data.filter(job => {
+        if(job.id == jobDeleteId){
           return null
-         }
-         return job
-      }).filter(job =>{
-        if (job.department_id == this.selectedDepartment || this.selectedDepartment == '') {
-          return job
-         }
-      }).filter(job =>{
-        if (job.type_id == this.selectedType || this.selectedType == '') {
-          return job
-         }
-      }).filter(job =>{
-        if (job.locale_id == this.selectedLocale || this.selectedLocale == '') {
-          return job
-         }
-      }).filter(job =>{
-        if (job.department_id == this.selectedDepartment || this.selectedDepartment == '') {
-          return job
-         }
-      }).filter(job =>{
-        if (job.department_id == this.selectedDepartment || this.selectedDepartment == '') {
-          return job
-         }
-      }).filter(job =>{
-        if (this.undecorate(job.title).includes(this.undecorate(this.search))) {
-          return job
-         }
-      });
-    },
-    undecorate(string){
-        if(string != undefined){
-            string = string.toLowerCase()
-            string = string.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-            return string
         }
-        return false
+        return job
+      })
+    },
+    search(){
+        this.$axios.get(`${process.env.VUE_APP_BACKEND_URL}/api/jobs/search`,{
+            headers: {
+              'Access-Control-Allow-Origin': '*',
+              'Content-Type': 'application/json',
+            },
+            params:{
+              title:this.title,
+              locale:this.selected.locale,
+              department:this.selected.department,
+              type:this.selected.type,
+              remote:this.selected.remote
+            }
+          }).then((resp) => {
+            this.jobs = resp.data;
+          })
+    },
+    paginate(url){
+      url == 'next' ? url = this.jobs.next_page_url: url = this.jobs.prev_page_url
+        this.$axios.get(url,{
+            headers: {
+              'Access-Control-Allow-Origin': '*',
+              'Content-Type': 'application/json',
+            }
+          }).then((resp) => {
+            window.scrollTo(0,0)
+            this.jobs = resp.data;
+          })
     }
   },
-  watch:{
-    search(){
-      this.filter('title',this.search);
-    },
-  },
-  beforeRouteEnter(to, from, next){
-    next(vm => {
-          vm.$axios.get('http://127.0.0.1:8000/api/jobs/').then((resp) => {
-            vm.jobs = resp.data;
-            vm.jobCard = resp.data;
-          })
-    })
-  },
   mounted(){
-          this.$axios.get('http://127.0.0.1:8000/api/filter').then((resp) => {
+          this.$axios.get(`${process.env.VUE_APP_BACKEND_URL}/api/jobs/filters`,{
+            headers: {
+              'Access-Control-Allow-Origin': '*',
+              'Content-Type': 'application/json',
+            }
+          }).then((resp) => {
             this.job.types = resp.data.types
             this.job.locales = resp.data.locales
             this.job.departaments = resp.data.departments
+          })
+
+          this.$axios.get(`${process.env.VUE_APP_BACKEND_URL}/api/jobs`,{
+            headers: {
+              'Access-Control-Allow-Origin': '*',
+              'Content-Type': 'application/json',
+            }
+          }).then((resp) => {
+            console.log(resp.data)
+            this.jobs = resp.data;
           })
   },
   components:{

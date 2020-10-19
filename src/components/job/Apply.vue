@@ -106,7 +106,6 @@
 </template>
 
 <script>
-import mask from 'vanilla-masker/lib/vanilla-masker'
 export default {
     props:['id'],
     data(){
@@ -115,7 +114,7 @@ export default {
                 name: 'tets',
                 surname: 'aa',
                 email: 'a',
-                phone: '',
+                phone: 11940757445,
                 why_hire: 'a',
                 knows: 'a',
                 file: ''

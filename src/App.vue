@@ -1,10 +1,10 @@
 <template>
   <div id="app" class="flex flex-col h-screen justify-between">
-    <navbar v-if="!routeLoginActive"/>
+    <navbar v-if="this.$route.path != '/login'" :user.sync="user"/>
 
-    <router-view class="mb-auto" @routeLogin="routeLoginActive = $event"/>
+    <router-view class="mb-auto" :user.sync="user" @update:user="user = $event"/>
 
-    <footer-vagator v-if="!routeLoginActive"/>
+    <footer-vagator v-if="this.$route.path != '/login'"/>
   </div>
 </template>
 
@@ -20,9 +20,23 @@ export default {
   },
   data(){
     return{
-      routeLoginActive: false,
+      user:null,
+  }
+  },
+  methods:{
+    getUserLogged() {
+       if (localStorage.user == null) {
+        this.user = null;
+      }
+      else {
+        this.user = JSON.parse(localStorage.user);
+      }
     }
   },
+  mounted(){
+    this.getUserLogged()
+    console.log(this.user);
+  }
 }
 </script>
 

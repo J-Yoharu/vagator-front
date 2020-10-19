@@ -4,6 +4,7 @@ import Login from './views/Login'
 import Home from './views/Home'
 import Job from './views/Job'
 import JobCreate from './views/JobCreate'
+import JobUpdate from './views/JobUpdate'
 import JobError from './views/404/Job'
 import Description from './components/job/Description'
 import Apply from './components/job/Apply'
@@ -22,13 +23,17 @@ export default new Router({
         component: Login
     },{
         path: '/jobs',
-        component: Home
+        component: Home,
     },{
         path: '/jobs/create',
         component: JobCreate
     },{
         path: '/jobs/error',
         component: JobError
+    },{
+        path: '/jobs/:id/update',
+        component: JobUpdate,
+        props:true
     },{
         path: '/jobs/:id',
         component: Job,

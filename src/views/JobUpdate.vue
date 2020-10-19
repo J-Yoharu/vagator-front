@@ -1,9 +1,9 @@
 <template>
-    <div class="bg-gray-300">
+ <div class="bg-gray-300">
         <div class="bg-white border-b-2 p-8">
             <div class="container mx-auto flex items-center">
                 <i class="fa fa-2x fa-chevron-left pr-5 text-gray-400" aria-hidden="true"></i>
-                <h1 class="text-2xl font-semibold">Cadastrar nova vaga</h1>
+                <h1 class="text-2xl font-semibold">Atualizar vaga</h1>
             </div>
         </div>
 
@@ -14,7 +14,7 @@
                 </div>
 
                 <div class="mt-5 mb-8">
-                    <form>
+                    <form action="">
                         <div class="flex justify-around">
                             <div class="w-full mb font-semibold text-lg text-gray-600">
                                 <label><span class="f-red">*</span> Nome da vaga</label>
@@ -83,49 +83,34 @@
             </div>
         </div>
     </div>
-
 </template>
 
 <script>
-/*eslint-disable*/
-import Quill from 'quill'
-import 'quill/dist/quill.snow.css'
-import 'quill/dist/quill.bubble.css'
-import 'quill/dist/quill.core.css'
-
 export default {
+    props:['id','user'],
     data(){
-        return {
-            text: ''
+        return{
+            job:''
         }
     },
-    methods: {
-        send(){
-           
-        }
-    },
-    mounted(){
-
-        var options = {
-        debug: 'info',
-        modules: {'toolbar': [
-                [ 'bold', 'italic', 'underline' ],
-                [ { 'list': 'ordered' }, { 'list': 'bullet'} ],
-                [ 'link', ],
-                [ 'code-block' ],
-            ]
-            
-        },
-        theme: 'snow'
-        };
-        var quill = new Quill('#editor', options);
+    beforeRouteEnter(to, from, next){
+        next(vm =>{
+            setTimeout(()=>{
+                if(vm.user != null){
+                    vm.$axios.get(`${process.env.VUE_APP_BACKEND_URL}/api/jobs/${vm.id}`).then(resp =>{
+                        console.log(resp)
+                    })
+                    return true
+                }else{
+                    console.log("usuário errado")
+                    vm.$router.push('/jobs')
+                }
+            },100)
+        })
     }
 }
 </script>
 
 <style>
 
-.ql-font-roboto {
-  font-family: 'Roboto', sans-serif;
-}
 </style>

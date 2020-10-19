@@ -43,7 +43,7 @@ export default {
     },
     beforeRouteEnter(to, from, next){
     next(vm => {
-          vm.$axios.get(`http://127.0.0.1:8000/api/jobs/${vm.id}`).then((resp) => {
+          vm.$axios.get(`${process.env.VUE_APP_BACKEND_URL}/api/jobs/${vm.id}`).then((resp) => {
               if(Object.keys(resp.data).length !=0){
                   vm.job = resp.data;           
                   return true
