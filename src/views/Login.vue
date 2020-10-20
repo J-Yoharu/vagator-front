@@ -60,6 +60,7 @@ export default {
               this.$emit('update:user', response.data.user)
               localStorage.token = response.data.token
               localStorage.user = JSON.stringify(response.data.user)
+              this.$axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.token}`;
               this.$router.push('/jobs')
 
             }).catch(err =>{

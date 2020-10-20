@@ -61,13 +61,8 @@ export default {
             }
         },
         deleteJob(){
-            this.$axios.delete(`/api/jobs/${this.job.id}`,{
-                headers: { 
-                    'Access-Control-Allow-Origin': '*',
-                    Authorization: `Bearer ${localStorage.token}`, 
-                    mode:'no cors',
-                }
-            }).then(() =>{
+            this.toggleMenu()
+            this.$axios.delete(`/api/jobs/${this.job.id}`).then(() =>{
                 this.$emit('delete:job', this.job.id);
             })
         },

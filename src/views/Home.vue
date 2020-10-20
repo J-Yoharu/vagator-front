@@ -123,7 +123,6 @@ export default {
   },
   methods:{
     deleteJob(jobDeleteId){
-      console.log(this.jobs)
       this.jobs.data = this.jobs.data.filter(job => {
         if(job.id == jobDeleteId){
           return null
@@ -133,10 +132,6 @@ export default {
     },
     search(){
         this.$axios.get(`/api/jobs/search`,{
-            headers: {
-              'Access-Control-Allow-Origin': '*',
-              'Content-Type': 'application/json',
-            },
             params:{
               title:this.title,
               locale:this.selected.locale,
@@ -150,35 +145,20 @@ export default {
     },
     paginate(url){
       url == 'next' ? url = this.jobs.next_page_url: url = this.jobs.prev_page_url
-        this.$axios.get(url,{
-            headers: {
-              'Access-Control-Allow-Origin': '*',
-              'Content-Type': 'application/json',
-            }
-          }).then((resp) => {
+        this.$axios.get(url).then((resp) => {
             window.scrollTo(0,0)
             this.jobs = resp.data;
           })
     }
   },
   mounted(){
-          this.$axios.get(`/api/jobs/filters`,{
-            headers: {
-              'Access-Control-Allow-Origin': '*',
-              'Content-Type': 'application/json',
-            }
-          }).then((resp) => {
+          this.$axios.get(`/api/jobs/filters`).then((resp) => {
             this.job.types = resp.data.types
             this.job.locales = resp.data.locales
             this.job.departaments = resp.data.departments
           })
 
-          this.$axios.get(`/api/jobs`,{
-            headers: {
-              'Access-Control-Allow-Origin': '*',
-              'Content-Type': 'application/json',
-            }
-          }).then((resp) => {
+          this.$axios.get(`/api/jobs`).then((resp) => {
             console.log(resp.data)
             this.jobs = resp.data;
           })

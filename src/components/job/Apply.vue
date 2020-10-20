@@ -1,5 +1,6 @@
 <template>
 <div>
+    <alert-vue v-if="alert.visible" @closeAlert="alert.visible = $event" :type="alert.type" :message="alert.message"/>
     <div class="flex justify-center">
         <div v-if="success" role="alert" class="w-1/2">
             <div class="bg-green-500 text-white font-bold rounded-t px-4 py-2">
@@ -106,7 +107,9 @@
 </template>
 
 <script>
+import notificate from '../../mixins/notificate'
 export default {
+    mixins: [notificate],
     props:['id'],
     data(){
         return{
@@ -125,9 +128,7 @@ export default {
     },
     methods:{
         sendForm(){
-            this.valideForm()
 
-            if(!this.error){
             let formData = new FormData()
             formData.append('job_id', this.id)
             let settings = {headers: {'content-type': 'multipart / form-data'}}
@@ -136,25 +137,17 @@ export default {
             });
     
             this.$axios.post('/api/applicant/', formData, settings)
-                .then(() => {
-                    this.success= true
+                .then(resp => {
+                    console.log(resp)
                     this.clearPrivate();
                     this.clearDetail();
-                    window.scrollTo(0,0);
+                    this.notification('success',resp.data.success)
+                }).catch(error => {
+                    console.log(error.response)
+                    this.notification('error', 'Algo de errado não deu certo')
                 })
-            }
+        },
 
-        },
-        valideForm(){
-            Object.values(this.formField).forEach(value =>{
-                if(value == ''){
-                    this.error = true
-                    window.scrollTo(0,0);
-                    return false
-                }
-                this.error = false
-            });
-        },
         clearPrivate(){
             this.formField.name = ''
             this.formField.surname = ''

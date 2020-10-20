@@ -1,6 +1,6 @@
 <template>
     <div class="bg-gray-300">
-        <alert v-if="alert.visible" @closeAlert="alert.visible = $event" :type="alert.type" :message="alert.message"/>
+        <alert-vue v-if="alert.visible" @closeAlert="alert.visible = $event" :type="alert.type" :message="alert.message"/>
         <div class="bg-white border-b-2 p-8">
             <div class="container mx-auto flex items-center">
                 <i class="fa fa-2x fa-chevron-left pr-5 text-gray-400" aria-hidden="true"></i>
@@ -93,9 +93,10 @@ import Type from '../components/Types'
 import Department from '../components/Departments'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.core.css'
-import Alert from '../components/Alert'
+import notificate from '../mixins/notificate'
 
 export default {
+    mixins: [notificate],
     data(){
         return {
             title: '',
@@ -107,18 +108,12 @@ export default {
             country:'',
             description:'',
             clearFields:false,
-            alert:{
-                visible:false,
-                type:'',
-                message:''
-            }
         }
     },
     components:{
         Locale,
         Type,
         Department,
-        Alert
     },
     methods: {
         send(){
@@ -129,11 +124,7 @@ export default {
                 type_id: this.type,
                 is_remote: this.remote,
                 description: this.description,
-            },{headers: { 
-                    'Access-Control-Allow-Origin': '*',
-                    Authorization: `Bearer ${localStorage.token}`, 
-                    mode:'no cors',
-                }}).then((resp) => {
+            }).then((resp) => {
                     this.title = ""
                     this.department = ""
                     this.locale = ""
@@ -141,16 +132,19 @@ export default {
                     this.remote = ""
                     this.description = ""
                     this.clearFields=true
+                    console.log(resp)
+                    this.notification('success',resp.data.success)
                 }).catch(error =>{
-                    console.log(error)
+                    this.notification('error','algo de errado não está certo')
+
                 })
-                this.clearFields=false
+            this.clearFields=false
         },
         setLocale(locale){
             this.locale = locale.id
             this.country = locale.country
             this.state = locale.state
-        }
+        },
         
     },
     mounted(){
@@ -173,7 +167,4 @@ export default {
 
 <style>
 
-.ql-font-roboto {
-  font-family: 'Roboto', sans-serif;
-}
 </style>

@@ -1,5 +1,6 @@
 <template>
     <div class="bg-gray-300">
+        <alert-vue v-if="alert.visible" @closeAlert="alert.visible = $event" :type="alert.type" :message="alert.message"/>
         <div class="bg-white border-b-2 p-8">
             <div class="container mx-auto flex items-center">
                 <i class="fa fa-2x fa-chevron-left pr-5 text-gray-400" aria-hidden="true"></i>
@@ -92,9 +93,11 @@ import Type from '../components/Types'
 import Department from '../components/Departments'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.core.css'
+import notificate from '../mixins/notificate'
 
 export default {
-    props:['id'],
+    mixins: [notificate],
+    props: ['id'],
     data(){
         return {
             title: '',
@@ -106,7 +109,7 @@ export default {
             country:'',
             description:'',
             clearFields:false,
-            selected:''
+            selected:'',
         }
     },
     components:{
@@ -116,12 +119,7 @@ export default {
     },
     methods: {
          getJob(){
-        this.$axios.get(`/api/jobs/${this.id}`,{
-            headers: {
-              'Access-Control-Allow-Origin': '*',
-              'Content-Type': 'application/json',
-            }
-          }).then((resp) => {
+        this.$axios.get(`/api/jobs/${this.id}`).then((resp) => {
             this.title = resp.data.title
             this.selected = resp.data
             this.remote = resp.data.is_remote
@@ -136,14 +134,10 @@ export default {
                 type_id: this.type,
                 is_remote: this.remote,
                 description: this.description,
-            },{headers: { 
-                    'Access-Control-Allow-Origin': '*',
-                    Authorization: `Bearer ${localStorage.token}`, 
-                    mode:'no cors',
-                }}).then((resp) => {
-                    console.log("deu tudo certo")
+            }).then((resp) => {
+                    this.notification('success', resp.data.success)
                 }).catch(error =>{
-                    console.log(error)
+                    this.notification('error','Algo de errado não está certo')
                 })
                 this.clearFields=false
         },
@@ -151,7 +145,7 @@ export default {
             this.locale = locale.id
             this.country = locale.country
             this.state = locale.state
-        }
+        },
         
     },
     mounted(){
