@@ -26,7 +26,7 @@
                 </div>
                 <div class="flex mt-4">
                     <div class="mr-2 text-lg text-gray-700"> {{job.department.department}} </div>
-                    <div class="mr-2 text-lg text-gray-700"> · {{job.locale.locale}} </div>
+                    <div class="mr-2 text-lg text-gray-700"> · {{job.locale.country}}, {{job.locale.state}}, {{job.locale.city}} </div>
                     <div class="mr-2 text-lg text-gray-700"> · {{job.type.type}} </div>
                     <div v-if="job.is_remote" class="mr-2 text-lg text-gray-700"> · Remoto </div>
                 </div>
@@ -61,7 +61,7 @@ export default {
             }
         },
         deleteJob(){
-            this.$axios.delete(`${process.env.VUE_APP_BACKEND_URL}/api/jobs/${this.job.id}`,{
+            this.$axios.delete(`/api/jobs/${this.job.id}`,{
                 headers: { 
                     'Access-Control-Allow-Origin': '*',
                     Authorization: `Bearer ${localStorage.token}`, 

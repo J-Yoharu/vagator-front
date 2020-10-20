@@ -5,7 +5,7 @@
                 <h1 class="text-center font-bold text-gray-700 text-2xl">{{job.title}}</h1>
                 <div class="flex justify-center mt-3">
                     <div class="mr-2 text-lg text-gray-700">{{job.department.department}} </div>
-                    <div class="mr-2 text-lg text-gray-700"> · {{job.locale.locale}} </div>
+                    <div class="mr-2 text-lg text-gray-700"> ·  {{job.locale.country}}, {{job.locale.state}}, {{job.locale.city}}  </div>
                     <div class="mr-2 text-lg text-gray-700">· {{job.type.type}} </div>
                     <div v-if="job.is_remote" class="mr-2 text-lg text-gray-700"> · Remoto</div>
                 </div>
@@ -43,7 +43,7 @@ export default {
     },
     beforeRouteEnter(to, from, next){
     next(vm => {
-          vm.$axios.get(`${process.env.VUE_APP_BACKEND_URL}/api/jobs/${vm.id}`).then((resp) => {
+          vm.$axios.get(`/api/jobs/${vm.id}`).then((resp) => {
               if(Object.keys(resp.data).length !=0){
                   vm.job = resp.data;           
                   return true

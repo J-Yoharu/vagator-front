@@ -135,7 +135,7 @@ export default {
                 formData.append(field,this.formField[field])
             });
     
-            this.$axios.post('http://127.0.0.1:8000/api/applicant/', formData, settings)
+            this.$axios.post('/api/applicant/', formData, settings)
                 .then(() => {
                     this.success= true
                     this.clearPrivate();

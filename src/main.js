@@ -8,24 +8,9 @@ import dotenv from 'dotenv'
 dotenv.config();
 
 axios.defaults.withCredentials = true
-
+axios.defaults.baseURL = process.env.VUE_APP_BACKEND_URL;
+process.env.VUE_APP_BACKEND_URL
 Vue.prototype.$axios = axios
-
-Vue.directive('userLogged',{
-  /*eslint-disable */
-  update(el, binding, vnode) {
-    console.log("ATUALIZOUUU A PORRA DO MENU")
-  },
-  bind(el){
-    if (localStorage.user == null) {
-      console.log(el.style.display="none")
-      console.log("NÃO VAI RENDERIZAR O USER")
-    }
-    else {console.log("VAI RENDERIZAR O USER")
-      JSON.parse(localStorage.user);
-    }
-  }
-})
 new Vue({
   router,
   render: h => h(App),

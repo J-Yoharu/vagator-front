@@ -52,8 +52,8 @@ export default {
   },
   methods: {
     login(){
-    this.$axios(`${process.env.VUE_APP_BACKEND_URL}/sanctum/csrf-cookie`).then(() => {
-            this.$axios.post(`${process.env.VUE_APP_BACKEND_URL}/api/login`,{
+    this.$axios(`/sanctum/csrf-cookie`).then(() => {
+            this.$axios.post(`/api/login`,{
                   email: this.email,
                   password: this.password
             }).then(response => {

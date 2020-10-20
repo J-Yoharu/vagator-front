@@ -28,32 +28,15 @@
             <div class="mt-5 flex justify-around mb-6">
 
               <div class="w-full mr-5 text-gray-600">
-                <select name="opcoes" class="p-3 text-lg w-full rounded-lg border" v-model="selected.locale"
-                 placeholder="Local"> 
-                  <option value="" disabled selected hidden>Local</option>
-                  <option value=""></option>
-                  <option v-for="locale in job.locales" :key="locale.id" :value="locale.id">{{locale.locale}}</option>
-                </select>
+                <locale @select="selected.locale = $event" />
               </div>
 
-              
               <div class="w-full mr-5 text-gray-600">
-                <select name="opcoes" class="p-3 text-lg w-full rounded-lg border" v-model="selected.department"
-                   placeholder="Local">
-                  <option value="" disabled selected hidden>Departamento</option>
-                  <option value=""></option>
-                  <option v-for="departament in job.departaments" :key="departament.id" :value="departament.id">{{departament.department}}</option>
-                </select>
+                <department @select="selected.department = $event"/>
               </div>
-
               
               <div class="border w-full mr-5 rounded-md text-gray-600">
-                <select name="opcoes" class="p-3 text-lg w-full" v-model="selected.type"
-                  placeholder="Local">
-                  <option value="" disabled selected hidden>Tipo de emprego</option>
-                  <option value=""></option>
-                  <option v-for="type in job.types" :key="type.id" :value="type.id">{{type.type}}</option>
-                </select>
+                <type @select="selected.type = $event"/>
               </div>
 
               <div class="w-full text-gray-600 flex items-center">
@@ -105,7 +88,12 @@
 </template>
 
 <script>
+
 import JobCard from '../components/job/Card'
+import Locale from '../components/Locales'
+import Type from '../components/Types'
+import Department from '../components/Departments'
+
 import 'axios'
 
 export default {
@@ -125,8 +113,13 @@ export default {
         type:'',
         remote:false,
       }
-
     }
+  },
+    components:{
+      JobCard,
+      Locale,
+      Type,
+      Department
   },
   methods:{
     deleteJob(jobDeleteId){
@@ -139,7 +132,7 @@ export default {
       })
     },
     search(){
-        this.$axios.get(`${process.env.VUE_APP_BACKEND_URL}/api/jobs/search`,{
+        this.$axios.get(`/api/jobs/search`,{
             headers: {
               'Access-Control-Allow-Origin': '*',
               'Content-Type': 'application/json',
@@ -169,7 +162,7 @@ export default {
     }
   },
   mounted(){
-          this.$axios.get(`${process.env.VUE_APP_BACKEND_URL}/api/jobs/filters`,{
+          this.$axios.get(`/api/jobs/filters`,{
             headers: {
               'Access-Control-Allow-Origin': '*',
               'Content-Type': 'application/json',
@@ -180,7 +173,7 @@ export default {
             this.job.departaments = resp.data.departments
           })
 
-          this.$axios.get(`${process.env.VUE_APP_BACKEND_URL}/api/jobs`,{
+          this.$axios.get(`/api/jobs`,{
             headers: {
               'Access-Control-Allow-Origin': '*',
               'Content-Type': 'application/json',
@@ -190,9 +183,6 @@ export default {
             this.jobs = resp.data;
           })
   },
-  components:{
-    JobCard,
-  }
 }
 </script>
 
