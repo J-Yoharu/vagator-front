@@ -63,13 +63,9 @@
                         </div>
 
                         <div class="w-full mt-6">
-                            <textarea v-model="description" class="w-full h-32"></textarea>
-                            <!-- <label class="font-semibold text-lg text-gray-600"><span class="f-red">*</span> Descrição da Vaga</label>
-                            <div class="bg-white ">
-                                <div id="editor" class="" style="min-height:10rem">
-
-                                </div> 
-                            </div> -->
+                            <!-- <textarea v-model="description" class="w-full h-32"></textarea> -->
+                            <label class="font-semibold text-lg text-gray-600"><span class="f-red">*</span> Descrição da Vaga</label>
+                            <quill @updateQuillText="quillText = $event" :loadText="quillLoadText" />
                         
                         </div>
                         <div class="flex mt-10 justify-end">
@@ -87,13 +83,11 @@
 
 <script>
 /*eslint-disable*/
-import Quill from 'quill'
 import Locale from '../components/Locales'
 import Type from '../components/Types'
 import Department from '../components/Departments'
-import 'quill/dist/quill.snow.css'
-import 'quill/dist/quill.core.css'
 import notificate from '../mixins/notificate'
+import Quill from '../components/Quill'
 
 export default {
     mixins: [notificate],
@@ -107,15 +101,17 @@ export default {
             remote: false,
             state: '',
             country:'',
-            description:'',
             clearFields:false,
             selected:'',
+            quillText: '',
+            quillLoadText:''
         }
     },
     components:{
         Locale,
         Type,
-        Department
+        Department,
+        Quill
     },
     methods: {
          getJob(){
@@ -123,19 +119,21 @@ export default {
             this.title = resp.data.title
             this.selected = resp.data
             this.remote = resp.data.is_remote
-            this.description = resp.data.description
+            this.quillLoadText = resp.data.description
           })
         },
         send(){
+            let user = JSON.parse(localStorage.user)
             this.$axios.put(`/api/jobs/${this.id}`,{
                 title: this.title,
                 department_id: this.department,
                 locale_id: this.locale,
                 type_id: this.type,
                 is_remote: this.remote,
-                description: this.description,
+                description: this.quillText,
+                user_id: user.id
             }).then((resp) => {
-                    this.notification('success', resp.data.success)
+                    this.notification('success', "Atualizado a vaga com sucesso")
                 }).catch(error =>{
                     this.notification('error','Algo de errado não está certo')
                 })

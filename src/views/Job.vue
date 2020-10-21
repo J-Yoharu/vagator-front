@@ -1,6 +1,6 @@
 <template>
   <div class="bg-gray-100">
-      <div class="bg-white">
+      <div class="bg-white" v-if="job != null">
             <div class="container mx-auto p-8">
                 <h1 class="text-center font-bold text-gray-700 text-2xl">{{job.title}}</h1>
                 <div class="flex justify-center mt-3">
@@ -23,7 +23,7 @@
                 </ul>
             </nav>
             <div class="container mx-auto">
-                <router-view></router-view>
+                <router-view :job="job"></router-view>
             </div>
       </div>
   </div>
@@ -34,24 +34,15 @@ export default {
     props:['id'],
     data(){
         return{
-            job:{
-                department: '',
-                locale: '',
-                type: ''
-            }
+            job:null
         }
     },
-    beforeRouteEnter(to, from, next){
-    next(vm => {
-          vm.$axios.get(`/api/jobs/${vm.id}`).then((resp) => {
-              if(Object.keys(resp.data).length !=0){
-                  vm.job = resp.data;           
-                  return true
-            } 
-            next('/jobs/error') 
+    created(){
+         this.$axios(`/api/jobs/${this.id}`).then((resp) => {
+                  this.job = resp.data; 
+                  console.log(resp.data)          
           })
-    })
-  },
+    }
 }
 </script>
 

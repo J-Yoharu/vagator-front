@@ -5,6 +5,8 @@ import '@/assets/styles/tailwind.css'
 import axios from 'axios'
 import dotenv from 'dotenv'
 import Alert from './components/Alert'
+import Loader from './components/Loader'
+
 dotenv.config();
 
 axios.defaults.withCredentials = true
@@ -17,6 +19,7 @@ if(localStorage.token != null){
 process.env.VUE_APP_BACKEND_URL
 
 Vue.component('alert-vue', Alert )
+Vue.component('loader', Loader)
 
 Vue.prototype.$axios = axios
 new Vue({

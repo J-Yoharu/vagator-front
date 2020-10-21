@@ -63,19 +63,15 @@
                         </div>
 
                         <div class="w-full mt-6">
-                            <textarea v-model="description" class="w-full h-32"></textarea>
-                            <!-- <label class="font-semibold text-lg text-gray-600"><span class="f-red">*</span> Descrição da Vaga</label>
-                            <div class="bg-white ">
-                                <div id="editor" class="" style="min-height:10rem">
+                            <!-- <textarea v-model="description" class="w-full h-32"></textarea> -->
+                            <label class="font-semibold text-lg text-gray-600"><span class="f-red">*</span> Descrição da Vaga</label>
+                            <quill  @updateQuillText="quillText = $event" />
 
-                                </div> 
-                            </div> -->
-                        
                         </div>
                         <div class="flex mt-10 justify-end">
                             <router-link tag="button" to="/jobs" 
                                 class="px-8 py-3 font-semibold text-gray-600 text-2xl rounded-xl mr-5">Cancelar</router-link>
-                            <button @click.prevent="send" class="px-8 py-3 font-semibold text-white text-2xl rounded-2xl c-red">Cadastrar</button>
+                            <button @click.prevent="send" class="px-4 py-3 font-semibold text-white text-2xl rounded-2xl c-red">Cadastrar</button>
                         </div>
                     </form>
                 </div>
@@ -87,13 +83,11 @@
 
 <script>
 /*eslint-disable*/
-import Quill from 'quill'
 import Locale from '../components/Locales'
 import Type from '../components/Types'
 import Department from '../components/Departments'
-import 'quill/dist/quill.snow.css'
-import 'quill/dist/quill.core.css'
 import notificate from '../mixins/notificate'
+import Quill from '../components/Quill'
 
 export default {
     mixins: [notificate],
@@ -108,22 +102,26 @@ export default {
             country:'',
             description:'',
             clearFields:false,
+            quillText: ''
         }
     },
     components:{
         Locale,
         Type,
         Department,
+        Quill
     },
     methods: {
         send(){
+            let user = JSON.parse(localStorage.user)
             this.$axios.post(`/api/jobs`,{
                 title: this.title,
                 department_id: this.department,
                 locale_id: this.locale,
                 type_id: this.type,
                 is_remote: this.remote,
-                description: this.description,
+                description: this.quillText,
+                user_id: user.id
             }).then((resp) => {
                     this.title = ""
                     this.department = ""
@@ -147,21 +145,6 @@ export default {
         },
         
     },
-    mounted(){
-        var options = {
-        debug: 'info',
-        modules: {'toolbar': [
-                [ 'bold', 'italic', 'underline' ],
-                [ { 'list': 'ordered' }, { 'list': 'bullet'} ],
-                [ 'link', ],
-                [ 'code-block' ],
-            ]
-            
-        },
-        theme: 'snow'
-        };
-        // var quill = new Quill('#editor', options);
-    }
 }
 </script>
 

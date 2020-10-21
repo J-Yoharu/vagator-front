@@ -134,7 +134,7 @@ export default {
         this.$axios.get(`/api/jobs/search`,{
             params:{
               title:this.title,
-              locale:this.selected.locale,
+              locale:this.selected.locale.id,
               department:this.selected.department,
               type:this.selected.type,
               remote:this.selected.remote
