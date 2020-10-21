@@ -3,7 +3,10 @@
         :class="type == 'success' ? 'bg-green-600' : 'bg-red-600'" role="alert">
         <div class="">
             <p class="font-bold mb-1 text-2xl">{{type}}</p>
-            <p style="word-break: break-all" class="text-grey-dark inline-block">{{message}}</p>
+            <ul v-if="typeof this.message == 'object'">
+                <li v-for="(m,i) in message" :key="i"> {{m.toString()}} </li>
+            </ul>
+            <p v-else style="word-break: break-all" class="text-grey-dark inline-block">{{message}}</p>
         </div>
         <div class="">
             <i class="fas fa-times mx-2 fa-2x text-grey-darker cursor-pointer" @click="close"></i>
@@ -18,6 +21,9 @@ export default {
         close(){
             this.$emit('closeAlert',false)
         }
+    },
+    updated(){
+        console.log(this.message);
     }
 }
 </script>

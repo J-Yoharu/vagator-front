@@ -1,24 +1,26 @@
-# vagator-front
+# Frontend - vagator
 
-## Project setup
+### Instalação
+
+A partir da raiz do projeto, você terá que seguir os passos abaixo para que tudo funcione da devida forma.
+
+Neste repositório há um exemplo de `.env` em `.env.example` se preferir renomeie o arquivo de `.env.example` para `.env` do host que está executando o , ex:
+
+- VUE_APP_BACKEND_URL = http://127.0.0.1:8000
+
+**Instalar dependências da parte do projeto:**
 ```
 npm install
 ```
-
-### Compiles and hot-reloads for development
+## Rodando o servidor
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
-```
-npm run build
-```
+## Autores
 
-### Lints and fixes files
-```
-npm run lint
-```
+* **Jonathas Apostulo** - [Github](https://github.com/J-Yoharu)
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## Licença
+
+Este projeto é licenciado através da MIT License.

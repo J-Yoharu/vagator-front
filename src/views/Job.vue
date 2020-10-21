@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gray-100">
+  <div>
       <div class="bg-white" v-if="job != null">
             <div class="container mx-auto p-8">
                 <h1 class="text-center font-bold text-gray-700 text-2xl">{{job.title}}</h1>

@@ -32,7 +32,7 @@
                             <div class="w-full ml-4 font-semibold text-lg text-gray-600">
                                 <label><span class="f-red">*</span> Estado</label>
                                 <input disabled v-model="state" type="text" required 
-                                    class="block w-full p-2 border border-gray-300 bg-white rounded focus:outline-none">
+                                    class="block w-full p-2 border border-gray-300 bg-white rounded focus:outline-none cursor-not-allowed">
                             </div>
                         </div>
 
@@ -40,7 +40,7 @@
                             <div class="w-full mr-4 font-semibold text-lg text-gray-600">
                                 <label><span class="f-red">*</span> País</label>
                                 <input disabled v-model="country" type="text" required 
-                                    class="block w-full p-2 border border-gray-300 bg-white rounded focus:outline-none">
+                                    class="block w-full p-2 border border-gray-300 bg-white rounded focus:outline-none cursor-not-allowed">
                             </div>
                             <div class="w-full ml-4 font-semibold text-lg text-gray-600">
                                 <label><span class="f-red">*</span> Departamento</label>
@@ -135,7 +135,7 @@ export default {
             }).then((resp) => {
                     this.notification('success', "Atualizado a vaga com sucesso")
                 }).catch(error =>{
-                    this.notification('error','Algo de errado não está certo')
+                    this.notification('error', error.response.data.errors)
                 })
                 this.clearFields=false
         },

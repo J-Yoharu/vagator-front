@@ -6,6 +6,7 @@ import axios from 'axios'
 import dotenv from 'dotenv'
 import Alert from './components/Alert'
 import Loader from './components/Loader'
+import VueMask from 'v-mask'
 
 dotenv.config();
 
@@ -20,7 +21,7 @@ process.env.VUE_APP_BACKEND_URL
 
 Vue.component('alert-vue', Alert )
 Vue.component('loader', Loader)
-
+Vue.use(VueMask);
 Vue.prototype.$axios = axios
 new Vue({
   router,

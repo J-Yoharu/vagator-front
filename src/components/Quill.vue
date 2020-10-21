@@ -11,7 +11,7 @@ import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.core.css'
 import Quill from 'quill'
 export default {
-    props:['loadText'],
+    props:['loadText','submit'],
     data(){
         return{
             quill:''
@@ -37,6 +37,9 @@ export default {
     },watch:{
         loadText(){
             this.quill.root.innerHTML=this.loadText
+        },
+        submit(){
+            this.quill.setText('');
         }
     }
 }

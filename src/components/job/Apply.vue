@@ -1,26 +1,6 @@
 <template>
 <div>
     <alert-vue v-if="alert.visible" @closeAlert="alert.visible = $event" :type="alert.type" :message="alert.message"/>
-    <div class="flex justify-center">
-        <div v-if="success" role="alert" class="w-1/2">
-            <div class="bg-green-500 text-white font-bold rounded-t px-4 py-2">
-                Sucesso!
-            </div>
-            <div class="border border-t-0 border-green-400 rounded-b bg-red-100 px-4 py-3">
-                <p>Seu cadastro foi concluido com sucesso.<router-link to="/jobs" tag="a" class="text-blue-700">clique aqui </router-link>para ver mais vagas</p>
-            </div>
-        </div>
-    </div>
-    <div v-if="error" class="flex justify-center">
-        <div role="alert" class="w-1/2">
-            <div class="bg-red-500 text-white font-bold rounded-t px-4 py-2">
-                Erro!
-            </div>
-            <div class="border border-t-0 border-red-400 rounded-b bg-red-100 px-4 py-3">
-                <p>Há campos obrigatórios não preenchidos, favor preencher todos.</p>
-            </div>
-        </div>
-    </div>
     <div class="text-gray-600 text-lg">
         <span class="f-red">*</span> Campos obrigatórios
     </div>
@@ -57,8 +37,8 @@
                         class="block w-full p-2 border border-gray-300 bg-white rounded focus:outline-none">
                 </div>
                 <div class="w-full ml-4 font-semibold text-lg text-gray-600">
-                    <label><span class="f-red">*</span> Telefone</label>
-                    <input type="text" id="phone" required v-model="formField.phone" 
+                    <label><span class="f-red">*</span> Celular</label>
+                    <input type="text" v-mask="'(##) #####-####'" required v-model="formField.phone" 
                         class="block w-full p-2 border border-gray-300 bg-white rounded focus:outline-none">
                 </div>
             </div>
@@ -117,7 +97,7 @@ export default {
                 name: 'tets',
                 surname: 'aa',
                 email: 'a',
-                phone: 11940757445,
+                phone: '',
                 why_hire: 'a',
                 knows: 'a',
                 file: ''
@@ -128,23 +108,24 @@ export default {
     },
     methods:{
         sendForm(){
-
+            this.formField.phone = this.formField.phone.replace(/([^\d])+/gim, '');
+            this.formField.knows == '' ? this.formField.knows = 'Não': false
             let formData = new FormData()
             formData.append('job_id', this.id)
             let settings = {headers: {'content-type': 'multipart / form-data'}}
+            console.log(formData)
             Object.keys(this.formField).forEach(field => {
                 formData.append(field,this.formField[field])
             });
     
             this.$axios.post('/api/applicant/', formData, settings)
                 .then(resp => {
-                    console.log(resp)
                     this.clearPrivate();
                     this.clearDetail();
                     this.notification('success',resp.data.success)
                 }).catch(error => {
                     console.log(error.response)
-                    this.notification('error', 'Algo de errado não deu certo')
+                    this.notification('error', error.response.data.errors)
                 })
         },
 
@@ -160,6 +141,7 @@ export default {
             this.formField.knows = ''
         },
         handleFileUpload(){
+            console.log("mudou")
             this.formField.file = this.$refs.file.files[0]
         }
     },created(){

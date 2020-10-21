@@ -32,7 +32,7 @@
                             <div class="w-full ml-4 font-semibold text-lg text-gray-600">
                                 <label><span class="f-red">*</span> Estado</label>
                                 <input disabled v-model="state" type="text" required 
-                                    class="block w-full p-2 border border-gray-300 bg-white rounded focus:outline-none">
+                                    class="block w-full p-2 border border-gray-300 bg-white rounded focus:outline-none cursor-not-allowed">
                             </div>
                         </div>
 
@@ -40,7 +40,7 @@
                             <div class="w-full mr-4 font-semibold text-lg text-gray-600">
                                 <label><span class="f-red">*</span> País</label>
                                 <input disabled v-model="country" type="text" required 
-                                    class="block w-full p-2 border border-gray-300 bg-white rounded focus:outline-none">
+                                    class="block w-full p-2 border border-gray-300 bg-white rounded focus:outline-none cursor-not-allowed">
                             </div>
                             <div class="w-full ml-4 font-semibold text-lg text-gray-600">
                                 <label><span class="f-red">*</span> Departamento</label>
@@ -65,7 +65,7 @@
                         <div class="w-full mt-6">
                             <!-- <textarea v-model="description" class="w-full h-32"></textarea> -->
                             <label class="font-semibold text-lg text-gray-600"><span class="f-red">*</span> Descrição da Vaga</label>
-                            <quill  @updateQuillText="quillText = $event" />
+                            <quill :submit="submit" @updateQuillText="quillText = $event" />
 
                         </div>
                         <div class="flex mt-10 justify-end">
@@ -102,7 +102,8 @@ export default {
             country:'',
             description:'',
             clearFields:false,
-            quillText: ''
+            quillText: '',
+            submit:false
         }
     },
     components:{
@@ -113,7 +114,9 @@ export default {
     },
     methods: {
         send(){
+            this.submit=true
             let user = JSON.parse(localStorage.user)
+            let error = null
             this.$axios.post(`/api/jobs`,{
                 title: this.title,
                 department_id: this.department,
@@ -123,27 +126,28 @@ export default {
                 description: this.quillText,
                 user_id: user.id
             }).then((resp) => {
+                    this.clearFields=true
                     this.title = ""
                     this.department = ""
                     this.locale = ""
                     this.type = ""
                     this.remote = ""
                     this.description = ""
-                    this.clearFields=true
+                    this.submit=false
                     console.log(resp)
                     this.notification('success',resp.data.success)
-                }).catch(error =>{
-                    this.notification('error','algo de errado não está certo')
-
+                }).catch(err =>{
+                    error = true
+                    this.notification('error', err.response.data.errors)
                 })
-            this.clearFields=false
+                error != null ? false:this.clearFields=false
+            
         },
         setLocale(locale){
             this.locale = locale.id
             this.country = locale.country
             this.state = locale.state
-        },
-        
+        },  
     },
 }
 </script>
