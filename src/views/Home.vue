@@ -159,7 +159,6 @@ export default {
           })
 
           this.$axios.get(`/api/jobs`).then((resp) => {
-            console.log(resp.data)
             this.jobs = resp.data;
           })
   },

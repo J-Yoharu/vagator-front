@@ -134,7 +134,6 @@ export default {
                     this.remote = ""
                     this.description = ""
                     this.submit=false
-                    console.log(resp)
                     this.notification('success',resp.data.success)
                 }).catch(err =>{
                     error = true

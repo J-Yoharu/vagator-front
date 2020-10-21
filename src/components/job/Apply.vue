@@ -94,12 +94,12 @@ export default {
     data(){
         return{
             formField:{
-                name: 'tets',
-                surname: 'aa',
-                email: 'a',
+                name: '',
+                surname: '',
+                email: '',
                 phone: '',
-                why_hire: 'a',
-                knows: 'a',
+                why_hire: '',
+                knows: '',
                 file: ''
             },
             error:  false,
@@ -113,7 +113,6 @@ export default {
             let formData = new FormData()
             formData.append('job_id', this.id)
             let settings = {headers: {'content-type': 'multipart / form-data'}}
-            console.log(formData)
             Object.keys(this.formField).forEach(field => {
                 formData.append(field,this.formField[field])
             });
@@ -124,7 +123,6 @@ export default {
                     this.clearDetail();
                     this.notification('success',resp.data.success)
                 }).catch(error => {
-                    console.log(error.response)
                     this.notification('error', error.response.data.errors)
                 })
         },
@@ -141,7 +139,6 @@ export default {
             this.formField.knows = ''
         },
         handleFileUpload(){
-            console.log("mudou")
             this.formField.file = this.$refs.file.files[0]
         }
     },created(){

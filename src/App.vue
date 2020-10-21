@@ -35,7 +35,6 @@ export default {
   },
   mounted(){
     this.getUserLogged()
-    console.log(this.user);
   }
 }
 </script>

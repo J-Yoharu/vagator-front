@@ -52,9 +52,7 @@ export default {
         localStorage.removeItem('token');
         this.$router.push('/login')
       },
-    },mounted(){
-    console.log(this.user);
-  },
+    }
 }
 </script>
 

@@ -22,9 +22,6 @@ export default {
             this.$emit('closeAlert',false)
         }
     },
-    updated(){
-        console.log(this.message);
-    }
 }
 </script>
 

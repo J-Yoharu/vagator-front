@@ -40,7 +40,6 @@ export default {
     created(){
          this.$axios(`/api/jobs/${this.id}`).then((resp) => {
                   this.job = resp.data; 
-                  console.log(resp.data)          
           })
     }
 }

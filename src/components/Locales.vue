@@ -21,9 +21,7 @@ export default {
         getLocales(){
         this.$axios.get(`/api/locales`,{
           }).then((resp) => {
-              console.log("respondeuuu")
               this.locales = resp.data
-            console.log(resp)
           })  
         },
         sendSelect(){
