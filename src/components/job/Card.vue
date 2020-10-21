@@ -26,7 +26,7 @@
                 </div>
                 <div class="flex mt-4">
                     <div class="mr-2 text-lg text-gray-700"> {{job.department.department}} </div>
-                    <div class="mr-2 text-lg text-gray-700"> · {{job.locale.country}}, {{job.locale.state}}, {{job.locale.city}} </div>
+                    <div class="mr-2 text-lg text-gray-700"> · {{job.locale.city}}, {{job.locale.state}}, {{job.locale.country}} </div>
                     <div class="mr-2 text-lg text-gray-700"> · {{job.type.type}} </div>
                     <div v-if="job.is_remote" class="mr-2 text-lg text-gray-700"> · Remoto </div>
                 </div>
